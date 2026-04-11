@@ -1,0 +1,19 @@
+# Godot 4+ specific ignores
+.godot/
+/android/
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+
+# Logs
+log/
+*.log
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Editor
+.opencode/
