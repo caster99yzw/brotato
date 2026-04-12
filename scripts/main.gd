@@ -6,6 +6,7 @@ extends Node2D
 
 var player: PlayerController
 var enemy_manager: EnemyManager
+var weapon: WeaponController
 
 func _ready() -> void:
 	setup_player()
@@ -20,13 +21,23 @@ func setup_player() -> void:
 	aim.player = player
 	player.add_child(aim)
 	
-	var weapon := WeaponController.new()
+	weapon = WeaponController.new()
 	weapon.player = player
-	weapon.bullet_scene = bullet_scene
 	weapon.fire_rate = 3.0
 	weapon.bullet_speed = 500.0
 	weapon.damage = 10.0
+	weapon.bullet_requested.connect(_on_bullet_requested)
+	weapon.kill_reward.connect(_on_kill_reward)
 	player.add_child(weapon)
+
+func _on_bullet_requested(direction: Vector2, speed: float, damage: float) -> void:
+	var bullet := bullet_scene.instantiate() as Bullet
+	bullet.setup(direction, speed, damage)
+	add_child(bullet)
+	bullet.global_position = player.global_position + direction * 20
+
+func _on_kill_reward(pos: Vector2) -> void:
+	pass
 
 func setup_enemy_manager() -> void:
 	enemy_manager = EnemyManager.new()

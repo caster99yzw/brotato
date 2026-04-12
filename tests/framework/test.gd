@@ -75,3 +75,6 @@ func assert_null(value, message: String = "") -> bool:
 func assert_not_null(value, message: String = "") -> bool:
 	var msg := message if message else "Expected not null"
 	return assert_true(value != null, msg)
+
+func assert_false(condition: bool, message: String = "") -> bool:
+	return assert_true(not condition, message)

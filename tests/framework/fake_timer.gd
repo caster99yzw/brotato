@@ -1,4 +1,4 @@
-class_name FakeSignal
+class_name FakeTimer
 extends RefCounted
 
 signal timeout
