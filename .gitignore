@@ -1,5 +1,9 @@
 # Godot
 .godot/
+*.uid
+
+# Local
+tests/.env
 
 # Python
 __pycache__/
