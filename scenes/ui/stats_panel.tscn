@@ -1,0 +1,45 @@
+[gd_scene load_steps=2 format=3 uid="uid://stats_panel"]
+
+[ext_resource type="Script" path="res://scripts/ui/stats_panel.gd" id="1_stats_panel"]
+
+[node name="StatsPanel" type="Control"]
+layout_mode = 3
+anchors_preset = 0
+offset_left = 10.0
+offset_top = 10.0
+offset_right = 210.0
+offset_bottom = 140.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_stats_panel")
+
+[node name="Panel" type="PanelContainer" parent="."]
+layout_mode = 1
+anchors_preset = 0
+offset_right = 190.0
+offset_bottom = 120.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Labels" type="VBoxContainer" parent="Panel"]
+layout_mode = 2
+
+[node name="Wave" type="Label" parent="Panel/Labels"]
+layout_mode = 2
+text = "波次 0 / 10"
+
+[node name="Damage" type="Label" parent="Panel/Labels"]
+layout_mode = 2
+text = "伤害: 10.0"
+
+[node name="FireRate" type="Label" parent="Panel/Labels"]
+layout_mode = 2
+text = "射速: 3.0"
+
+[node name="BulletSpeed" type="Label" parent="Panel/Labels"]
+layout_mode = 2
+text = "弹速: 500"
+
+[node name="DPS" type="Label" parent="Panel/Labels"]
+layout_mode = 2
+text = "DPS: 30.0"

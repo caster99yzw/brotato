@@ -4,6 +4,7 @@
 
 # Local
 tests/.env
+tests/run.bat
 
 # Python
 __pycache__/
