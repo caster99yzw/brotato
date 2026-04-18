@@ -9,6 +9,7 @@ signal wave_started(wave: int)
 var player: PlayerController
 var enemy_world: EnemyWorld
 var bullet_world: BulletWorld
+var bullet_factory
 var weapon: WeaponController
 var upgrade_manager: UpgradeManager
 var upgrade_panel: UpgradePanel
@@ -17,11 +18,6 @@ var wave_banner: Label
 var ui_layer: CanvasLayer
 
 var current_wave: int = 0
-var enemies_per_wave: int = 0
-var enemies_spawned: int = 0
-var enemies_killed: int = 0
-var spawn_interval: float = 1.5
-var spawn_timer_accum: float = 0.0
 
 func _ready() -> void:
 	setup_ui()
@@ -62,19 +58,22 @@ func setup_player() -> void:
 	player = player_scene.instantiate() as PlayerController
 	add_child(player)
 	player.global_position = get_viewport_rect().size / 2
-	
-	var aim := PlayerAim.new()
-	aim.player = player
-	player.add_child(aim)
 
 func setup_bullet_world() -> void:
+	const _BulletFactory = preload("res://scripts/bullet/bullet_factory.gd")
 	bullet_world = BulletWorld.new()
 	add_child(bullet_world)
-	
+
+	bullet_factory = _BulletFactory.new()
+	add_child(bullet_factory)
+
 	weapon = WeaponController.new()
 	weapon.player = player
 	weapon.bullet_world = bullet_world
+	weapon.equip_weapon("PISTOL")
 	player.add_child(weapon)
+
+	weapon.weapon_fired.connect(_on_weapon_fired)
 
 func setup_enemy_world() -> void:
 	enemy_world = EnemyWorld.new()
@@ -86,38 +85,22 @@ func setup_enemy_world() -> void:
 func setup_upgrade_system() -> void:
 	upgrade_manager = UpgradeManager.new()
 	upgrade_manager.weapon_controller = weapon
+	upgrade_manager.enemy_world = enemy_world
+	upgrade_manager.player = player
 	add_child(upgrade_manager)
 	
 	upgrade_panel.option_selected.connect(_on_upgrade_selected)
-	weapon.stats_changed.connect(_on_stats_changed)
+	weapon.stats_changed.connect(stats_panel.update_stats)
 	upgrade_manager.wave_completed.connect(_on_wave_completed)
 	upgrade_manager.game_won.connect(_on_game_won)
 	
-	_on_stats_changed(weapon.damage, weapon.fire_rate, weapon.bullet_speed)
+	player.aim.aim_direction_changed.connect(weapon.set_aim_direction)
+	
+	var stats: Dictionary = weapon.get_stats()
+	stats_panel.update_stats(stats.damage, stats.fire_rate, stats.bullet_speed)
 
 func _process(delta: float) -> void:
 	bullet_world.set_player_position(player.global_position)
-	spawn_enemies_if_needed(delta)
-
-func spawn_enemies_if_needed(delta: float) -> void:
-	if upgrade_manager.current_wave > upgrade_manager.max_waves:
-		return
-	if enemies_spawned >= enemies_per_wave:
-		return
-	
-	spawn_timer_accum += delta
-	if spawn_timer_accum >= spawn_interval:
-		spawn_timer_accum = 0.0
-		var enemy := EnemyData.new()
-		enemy.position = _random_spawn_position()
-		enemy.velocity = Vector2.ZERO
-		enemy_world.add_enemy(enemy)
-		enemies_spawned += 1
-
-func _random_spawn_position() -> Vector2:
-	var angle := randf() * TAU
-	var radius := 400.0
-	return player.global_position + Vector2(cos(angle), sin(angle)) * radius
 
 func start_game() -> void:
 	upgrade_manager.start_next_wave()
@@ -125,10 +108,6 @@ func start_game() -> void:
 
 func start_wave(wave: int, enemy_count: int) -> void:
 	current_wave = wave
-	enemies_per_wave = enemy_count
-	enemies_spawned = 0
-	enemies_killed = 0
-	spawn_timer_accum = 0.0
 	stats_panel.set_wave(current_wave)
 	_show_wave_banner(current_wave)
 	wave_started.emit(current_wave)
@@ -141,7 +120,6 @@ func _show_wave_banner(wave: int) -> void:
 		wave_banner.visible = false
 
 func _on_enemy_killed() -> void:
-	enemies_killed += 1
 	upgrade_manager.on_enemy_killed()
 
 func _on_wave_completed(wave: int) -> void:
@@ -154,11 +132,13 @@ func _on_upgrade_selected(option: Dictionary) -> void:
 	stats_panel.visible = true
 	_show_wave_banner(upgrade_manager.current_wave)
 
-func _on_stats_changed(damage: float, fire_rate: float, bullet_speed: float) -> void:
-	stats_panel.update_stats(damage, fire_rate, bullet_speed)
-
 func _on_game_won() -> void:
 	game_over.emit()
+
+func _on_weapon_fired(weapon_name: String, spawn_pos: Vector2, direction: Vector2, damage_mult: float, speed_mult: float, bullet_count: int) -> void:
+	var bullets: Array[BulletData] = bullet_factory.create_bullets(weapon_name, spawn_pos, direction, damage_mult, speed_mult, bullet_count)
+	for bullet: BulletData in bullets:
+		bullet_world.add_bullet(bullet)
 
 func restart() -> void:
 	queue_free()

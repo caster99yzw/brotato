@@ -5,6 +5,12 @@ extends CharacterBody2D
 
 var input = Input
 var aim_direction: Vector2 = Vector2.RIGHT
+var aim: PlayerAim
+
+func _ready() -> void:
+	aim = PlayerAim.new()
+	aim.player = self
+	add_child(aim)
 
 func _physics_process(delta: float) -> void:
 	var input_dir := Vector2.ZERO

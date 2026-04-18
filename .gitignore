@@ -21,3 +21,4 @@ Thumbs.db
 # Editor
 .opencode/
 debug/
+/resources/sprites/bullets/*.import
