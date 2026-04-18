@@ -70,9 +70,9 @@ func setup_bullet_world() -> void:
 	weapon = WeaponController.new()
 	weapon.player = player
 	weapon.bullet_world = bullet_world
-	weapon.equip_weapon("PISTOL")
 	player.add_child(weapon)
 
+	weapon.equip_weapon("PISTOL")
 	weapon.weapon_fired.connect(_on_weapon_fired)
 
 func setup_enemy_world() -> void:

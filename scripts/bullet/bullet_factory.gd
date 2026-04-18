@@ -36,10 +36,13 @@ func create_bullets(weapon_name: String, spawn_pos: Vector2, direction: Vector2,
 
 	for i: int in range(bullet_count):
 		var bullet: BulletData = _create_bullet(weapon_name, config, spawn_pos, direction, damage_mult, speed_mult)
+		var speed: float = config.get("speed", 500.0) * speed_mult
 		if bullet_count > 1:
-			var speed: float = config.get("speed", 500.0) * speed_mult
 			bullet.velocity = Vector2.from_angle(base_angle + angle_step * float(i)) * speed
 			bullet.trajectory_angle = base_angle + angle_step * float(i)
+		else:
+			bullet.velocity = direction * speed
+			bullet.trajectory_angle = direction.angle()
 		bullet.source_position = spawn_pos
 		bullet.initial_direction = bullet.velocity.normalized()
 		bullets.append(bullet)
