@@ -21,12 +21,27 @@
 	"enemies": { "method": "get_enemy_count", "target": "enemy_world", "returns": true, "result_template": "敌人数: {result}" },
 	"get_enemy_count": { "method": "get_enemy_count", "target": "enemy_world", "returns": true, "result_template": "敌人数: {result}" }
   },
+  "commands": {
+	"spawn_enemies": { "method": "spawn_enemies", "args": [5] },
+	"spawn_enemies_10": { "method": "spawn_enemies", "args": [10] },
+	"kill_all": { "method": "kill_all", "args": [] },
+	"complete_wave": { "method": "complete_wave", "args": [] },
+	"set_wave": { "method": "set_wave", "args": [5] },
+	"god_mode": { "method": "god_mode", "args": [true] },
+	"god_mode_off": { "method": "god_mode", "args": [false] },
+	"set_game_speed_2": { "method": "set_game_speed", "args": [2.0] },
+	"set_game_speed_1": { "method": "set_game_speed", "args": [1.0] },
+	"give_weapon_pistol": { "method": "give_weapon", "args": ["PISTOL"] },
+	"give_weapon_shotgun": { "method": "give_weapon", "args": ["SHOTGUN"] },
+	"give_weapon_rifle": { "method": "give_weapon", "args": ["RIFLE"] },
+	"remove_weapon": { "method": "remove_weapon", "args": [0] }
+  },
   "categories": [
 	{
 	  "name": "敌人",
 	  "buttons": [
 		{ "id": "spawn_enemies", "label": "生成5个敌人" },
-		{ "id": "spawn_enemies_10", "label": "生成10个敌人", "args": [10] },
+		{ "id": "spawn_enemies_10", "label": "生成10个敌人" },
 		{ "id": "kill_all", "label": "击杀所有敌人" }
 	  ]
 	},
@@ -34,24 +49,24 @@
 	  "name": "波次",
 	  "buttons": [
 		{ "id": "complete_wave", "label": "下一波" },
-		{ "id": "set_wave", "label": "设置波次5", "args": [5] }
+		{ "id": "set_wave", "label": "设置波次5" }
 	  ]
 	},
 	{
 	  "name": "玩家",
 	  "buttons": [
-		{ "id": "god_mode", "label": "上帝模式开", "args": [true] },
-		{ "id": "god_mode_off", "label": "上帝模式关", "args": [false] },
-		{ "id": "set_game_speed_2", "label": "2倍速", "args": [2.0] },
-		{ "id": "set_game_speed_1", "label": "正常速", "args": [1.0] }
+		{ "id": "god_mode", "label": "上帝模式开" },
+		{ "id": "god_mode_off", "label": "上帝模式关" },
+		{ "id": "set_game_speed_2", "label": "2倍速" },
+		{ "id": "set_game_speed_1", "label": "正常速" }
 	  ]
 	},
 	{
 	  "name": "武器",
 	  "buttons": [
-		{ "id": "give_weapon_pistol", "label": "添加手枪", "args": ["PISTOL"] },
-		{ "id": "give_weapon_shotgun", "label": "添加霰弹枪", "args": ["SHOTGUN"] },
-		{ "id": "give_weapon_rifle", "label": "添加步枪", "args": ["RIFLE"] },
+		{ "id": "give_weapon_pistol", "label": "添加手枪" },
+		{ "id": "give_weapon_shotgun", "label": "添加霰弹枪" },
+		{ "id": "give_weapon_rifle", "label": "添加步枪" },
 		{ "id": "remove_weapon", "label": "移除武器" }
 	  ]
 	}
