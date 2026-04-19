@@ -30,27 +30,28 @@ func test_level_weapon_can_fire():
 func test_level_spawns_enemies_on_wave_start():
 	_level.enemies_per_wave = 5
 	_level.spawn_interval = 0.01
-	_level.enemies_spawned = 0
+	_level.enemies_remaining = 5
+	watch_signal(_level, "wave_started")
 	_level.start_wave(1, 5)
 	for i in 20:
 		_level._process(0.1)
-	assert_gt(_level.enemies_spawned, 0, "enemies should spawn")
+	assert_gt(_level.enemy_world.enemies.size(), 0, "enemies should spawn")
+	assert_signal_emitted(_level, "wave_started", 1, "wave_started should be emitted")
 
 func test_level_wave_completes_when_all_enemies_killed():
 	_level.enemies_per_wave = 3
-	_level.enemies_spawned = 3
-	_level.enemies_killed = 0
+	_level.enemies_remaining = 3
 	_level.current_wave = 1
 	_level.start_wave(1, 3)
 
 	for i in 3:
 		var enemy = EnemyData.new()
 		enemy.position = Vector2(randf() * 800, randf() * 600)
-		enemy.alive = true
+		enemy.health = 30.0
 		_level.enemy_world.add_enemy(enemy)
 
 	for enemy in _level.enemy_world.enemies:
-		enemy.alive = false
-		_level.enemy_world.enemy_killed.emit()
+		enemy.health = 0
+		_level.enemy_world.enemy_killed.emit(1)
 
-	assert_eq(_level.enemies_killed, 3, "all enemies should be tracked as killed")
+	assert_eq(_level.enemies_remaining, 0, "all enemies should be tracked as killed")

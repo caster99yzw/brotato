@@ -42,7 +42,7 @@ func test_bullet_trajectory_spiral():
 func test_bullet_trajectory_homing():
 	var enemy = EnemyData.new()
 	enemy.position = _player.global_position + Vector2.RIGHT * 100
-	enemy.alive = true
+	enemy.health = 30.0
 	_level.enemy_world.add_enemy(enemy)
 	var bullet = _create_bullet("MISSILE")
 	bullet.trajectory_type = BulletData.TrajectoryType.HOMING

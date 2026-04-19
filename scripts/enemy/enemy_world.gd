@@ -35,10 +35,13 @@ func _add_to_grid(enemy: EnemyData) -> void:
 		_grid[key] = []
 	_grid[key].append(enemy)
 
+func is_alive(enemy: EnemyData) -> bool:
+	return enemy.health > 0
+
 func _grid_rebuild_system() -> void:
 	_grid.clear()
 	for enemy: EnemyData in enemies:
-		if enemy.alive:
+		if is_alive(enemy):
 			_add_to_grid(enemy)
 
 func find_enemies_near(pos: Vector2, radius: float) -> Array[EnemyData]:
@@ -57,7 +60,7 @@ func find_enemies_near(pos: Vector2, radius: float) -> Array[EnemyData]:
 
 func update_trajectory_system(enemies: Array, delta: float) -> void:
 	for enemy: EnemyData in enemies:
-		if not enemy.alive:
+		if not is_alive(enemy):
 			continue
 		if enemy.target and is_instance_valid(enemy.target):
 			var to_target: Vector2 = (enemy.target.global_position - enemy.position).normalized()
@@ -65,25 +68,31 @@ func update_trajectory_system(enemies: Array, delta: float) -> void:
 
 func update_position_system(enemies: Array, delta: float) -> void:
 	for enemy: EnemyData in enemies:
-		if not enemy.alive:
+		if not is_alive(enemy):
 			continue
 		enemy.position += enemy.velocity * delta
-		enemy.lifetime += delta
 
 func kill_system(enemies: Array) -> Array:
-	for enemy: EnemyData in enemies:
-		if enemy.health <= 0:
-			enemy.alive = false
-			enemy_killed.emit()
-		if not enemy.alive or enemy.lifetime > enemy.max_lifetime:
-			enemy.alive = false
-	
-	return enemies.filter(func(e: EnemyData): return e.alive)
+	var before_count := enemies.size()
+	enemies = enemies.filter(func(e: EnemyData): return is_alive(e))
+	var kill_count := before_count - enemies.size()
+	if kill_count > 0:
+		enemy_killed.emit(kill_count)
+	return enemies
 
 func get_active_enemy_count() -> int:
 	return enemies.size()
 
+func kill_all() -> int:
+	var count := enemies.size()
+	for enemy: EnemyData in enemies:
+		enemy.health = 0
+	return count
+
+func kill_all_no_signal() -> void:
+	kill_all()
+
 func _draw() -> void:
 	for enemy: EnemyData in enemies:
-		if enemy.alive:
+		if is_alive(enemy):
 			draw_circle(enemy.position, 15, Color.RED)

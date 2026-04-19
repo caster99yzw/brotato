@@ -1,0 +1,70 @@
+{
+  "command_defs": {
+	"spawn": { "method": "spawn_enemies", "target": "enemy_world", "arg_count": 1, "arg_type": "int", "default": 5, "result_template": "生成了 {arg0} 个敌人" },
+	"spawn_enemies": { "method": "spawn_enemies", "target": "enemy_world", "arg_count": 1, "arg_type": "int", "default": 5, "result_template": "生成了 {arg0} 个敌人" },
+	"kill": { "method": "kill_all", "target": "enemy_world", "result_template": "已击杀所有敌人" },
+	"kill_all": { "method": "kill_all", "target": "enemy_world", "result_template": "已击杀所有敌人" },
+	"complete_wave": { "method": "complete_wave", "target": "level", "result_template": "波次完成" },
+	"next_wave": { "method": "complete_wave", "target": "level", "result_template": "波次完成" },
+	"set_wave": { "method": "set_wave", "target": "level", "arg_count": 1, "arg_type": "int", "result_template": "设置波次为 {arg0}" },
+	"god_on": { "method": "god_mode", "target": "player", "arg_count": 1, "arg_type": "bool", "default": true, "result_template": "上帝模式开启" },
+	"god_off": { "method": "god_mode", "target": "player", "arg_count": 1, "arg_type": "bool", "default": false, "result_template": "上帝模式关闭" },
+	"god_mode": { "method": "god_mode", "target": "player", "arg_count": 1, "arg_type": "bool", "result_template": "上帝模式{arg0}" },
+	"speed": { "method": "set_game_speed", "target": "engine", "arg_count": 1, "arg_type": "float", "result_template": "游戏速度 {arg0}x" },
+	"set_game_speed": { "method": "set_game_speed", "target": "engine", "arg_count": 1, "arg_type": "float", "result_template": "游戏速度 {arg0}x" },
+	"give": { "method": "give_weapon", "target": "weapon", "arg_count": 1, "arg_type": "string", "result_template": "添加武器: {arg0}" },
+	"give_weapon": { "method": "give_weapon", "target": "weapon", "arg_count": 1, "arg_type": "string", "result_template": "添加武器: {arg0}" },
+	"remove_weapon": { "method": "remove_weapon", "target": "weapon", "arg_count": 1, "arg_type": "int", "result_template": "移除武器索引: {arg0}" },
+	"list_weapons": { "method": "list_weapons", "target": "weapon", "returns": true, "result_template": "武器列表: {count} 把" },
+	"wave": { "method": "get_wave", "target": "level", "returns": true, "result_template": "当前波次: {result}" },
+	"get_wave": { "method": "get_wave", "target": "level", "returns": true, "result_template": "当前波次: {result}" },
+	"enemies": { "method": "get_enemy_count", "target": "enemy_world", "returns": true, "result_template": "敌人数: {result}" },
+	"get_enemy_count": { "method": "get_enemy_count", "target": "enemy_world", "returns": true, "result_template": "敌人数: {result}" }
+  },
+  "categories": [
+	{
+	  "name": "敌人",
+	  "buttons": [
+		{ "id": "spawn_enemies", "label": "生成5个敌人" },
+		{ "id": "spawn_enemies_10", "label": "生成10个敌人", "args": [10] },
+		{ "id": "kill_all", "label": "击杀所有敌人" }
+	  ]
+	},
+	{
+	  "name": "波次",
+	  "buttons": [
+		{ "id": "complete_wave", "label": "下一波" },
+		{ "id": "set_wave", "label": "设置波次5", "args": [5] }
+	  ]
+	},
+	{
+	  "name": "玩家",
+	  "buttons": [
+		{ "id": "god_mode", "label": "上帝模式开", "args": [true] },
+		{ "id": "god_mode_off", "label": "上帝模式关", "args": [false] },
+		{ "id": "set_game_speed_2", "label": "2倍速", "args": [2.0] },
+		{ "id": "set_game_speed_1", "label": "正常速", "args": [1.0] }
+	  ]
+	},
+	{
+	  "name": "武器",
+	  "buttons": [
+		{ "id": "give_weapon_pistol", "label": "添加手枪", "args": ["PISTOL"] },
+		{ "id": "give_weapon_shotgun", "label": "添加霰弹枪", "args": ["SHOTGUN"] },
+		{ "id": "give_weapon_rifle", "label": "添加步枪", "args": ["RIFLE"] },
+		{ "id": "remove_weapon", "label": "移除武器" }
+	  ]
+	}
+  ],
+  "display": {
+	"enemy_count": { "label": "敌人数" },
+	"wave": { "label": "波次" },
+	"enemies_killed": { "label": "已击杀" }
+  },
+  "weapon_stats": {
+	"damage": { "label": "伤害" },
+	"fire_rate": { "label": "射速" },
+	"bullet_speed": { "label": "弹速" }
+  },
+  "command_input": true
+}
